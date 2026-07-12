@@ -1,12 +1,20 @@
 import styled from 'styled-components'
+import { FaSquareXTwitter } from 'react-icons/fa6'
+import { Link } from 'react-router-dom'
 
 export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   width: 100%;
   height: 600px;
-  background-color: #000;
+  color: #fff;
+
+  small {
+    margin: 0 8px;
+    color: red;
+  }
 `
 
 export const Form = styled.form`
@@ -14,28 +22,36 @@ export const Form = styled.form`
   flex-direction: column;
   color: #fff;
   margin: 8px;
-`
-
-export const Label = styled.label`
-  font-size: 16px;
-  margin: 8px 0;
+  width: 50%;
 `
 
 export const Input = styled.input`
-  font-size: 16px;
-  margin: 8px 0;
-  text-align: center;
-  height: 24px;
+  background-color: #fff;
+  border: 2px solid #fff;
+  line-height: 100%;
+  font-size: 24px;
+  margin: 8px;
+  padding: 16px;
+  cursor: pointer;
 `
 
 export const BotaoCadastro = styled.button`
-    background-color: purple;
-    color: #fff;
-    line-height: 100%;
-    text-align: center;
-    font-size: 24px;
-    margin: 8px;
-    padding: 16px;
-    border: none;
-    cursor: pointer;
+  background-color: #fff;
+  color: #000;
+  line-height: 100%;
+  text-align: center;
+  font-size: 24px;
+  margin: 8px 0;
+  padding: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+`
+
+export const LogoXtwitter = styled(FaSquareXTwitter)`
+  font-size: 48px;
+  color: white;
+`
+
+export const LinkCadastro = styled(Link)`
+  color: lightblue;
 `
