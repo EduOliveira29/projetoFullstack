@@ -1,6 +1,6 @@
 # core/serializers.py
 from rest_framework import serializers
-from ..models.models import User
+from ..models.models import User 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,10 +17,10 @@ class LoginSerializer(serializers.Serializer):
         password = data.get('password')
 
         user = User.objects.filter(email=email).first()
-
-        if user and user.check_password(password):
-            data['user'] = user
-            return data
+        user = User.objects.get(email=email)
+        
+        if user.check_password(password):
+            print("Password matches")
         
         raise serializers.ValidationError("E-mail ou senha inválidos.")
 

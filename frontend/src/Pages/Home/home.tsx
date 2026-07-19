@@ -1,9 +1,11 @@
+import SideBar from '../../components/Sidebar/Sidebar'
 import { Container } from './styles'
-import Login from '../../components/Login/login'
+import Profile from '../../components/Profile/Profile'
 
 const Home = () => (
   <Container>
-    <Login />
+    <SideBar />
+    <Profile />
   </Container>
 )
 

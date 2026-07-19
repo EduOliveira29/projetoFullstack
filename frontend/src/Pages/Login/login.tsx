@@ -1,14 +1,8 @@
-import {
-  Container,
-  Form,
-  BotaoLogin,
-  Input,
-  LogoXtwitter,
-  LinkCadastro,
-} from './styles'
+import { Container, Form, BotaoLogin, Input, LinkCadastro } from './styles'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useGetUsuariosQuery } from '../../service/api'
+import { LogoXtwitter } from '../../styles'
 
 const Login = () => {
   const { data: usuarios, isLoading } = useGetUsuariosQuery()
@@ -22,42 +16,41 @@ const Login = () => {
       password: Yup.string().required('O campo é obrigatório'),
     }),
     onSubmit: (values: { email: string; password: string }) => {
-      console.log("Valores digitados:", values);
-      console.log("Lista de usuários:", usuarios);
+      console.log('Valores digitados:', values)
+      console.log('Lista de usuários:', usuarios)
       handleLogin(values)
-  }
+    },
   })
   const handleLogin = async (values: { email: string; password: string }) => {
-  try {
-    const resposta = await fetch('http://localhost:8000/api/users/login/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: values.email,
-        password: values.password,
-      }),
-    });
+    try {
+      const resposta = await fetch('http://localhost:8000/api/users/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      })
 
-    const dados = await resposta.json();
+      const dados = await resposta.json()
 
-    if (resposta.ok) {
-  console.log('Sucesso:', dados);
-} else {
-  // Isso vai imprimir no console do navegador exatamente o que o Django recusou
-  console.error('Erro de validação:', dados);
-  alert('Erro: ' + JSON.stringify(dados));
-}
-  } catch (erro) {
-    console.error('Erro de conexão:', erro);
+      if (resposta.ok) {
+        window.location.href = "/Home"
+      } else {
+        console.error('Erro de validação:')
+        alert('Erro: ' + JSON.stringify(dados))
+      }
+    } catch (erro) {
+      console.error('Erro de conexão:', erro)
+    }
   }
-};
 
   return (
     <Container>
       <LogoXtwitter />
-      <Form onSubmit={formLogin.handleSubmit }>
+      <Form onSubmit={formLogin.handleSubmit}>
         <Input
           id="email"
           type="email"

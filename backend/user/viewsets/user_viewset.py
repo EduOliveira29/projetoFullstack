@@ -1,26 +1,34 @@
-# core/views.py
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
 from ..models.models import User
-from ..serializers.serializers import UserSerializer, LoginSerializer
+from ..serializers.serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from django.contrib.auth import login
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from rest_framework.permissions import AllowAny
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
 
+@method_decorator(csrf_exempt, name='dispatch')
 class LoginView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            # O 'user' foi injetado no validated_data pelo método validate do serializer
-            login(request, serializer.validated_data['user'])
-            return Response({"message": "Login realizado com sucesso!"})
+        email = request.data.get("email")
+        password = request.data.get("password")
         
-        # Se is_valid() falhar, ele retorna os erros definidos no serializer
-        return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+        print(f"Tentando login com: {email} / {password}") # Veja no terminal se chega certo
 
+        try:
+            user = User.objects.get(email=email)
+            print(f"Usuário encontrado no banco: {user.email}, Senha salva no banco: {user.password}")
+        except User.DoesNotExist:
+            return Response({'error': 'Usuário não encontrado'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        if user.check_password(password):
+            return Response({'message': 'Sucesso!'}, status=status.HTTP_200_OK)
+        
+        return Response({'error': 'E-mail ou senha inválidos.'}, status=status.HTTP_401_UNAUTHORIZED)
+    

@@ -1,14 +1,8 @@
-import {
-  Container,
-  Form,
-  BotaoCadastro,
-  Input,
-  LinkCadastro,
-  LogoXtwitter,
-} from './styles'
+import { Container, Form, BotaoCadastro, Input, LinkCadastro } from './styles'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useCadastrarUsuarioMutation } from '../../service/api'
+import { LogoXtwitter } from '../../styles'
 
 const Cadastro = () => {
   const [cadastrar, { isLoading }] = useCadastrarUsuarioMutation()

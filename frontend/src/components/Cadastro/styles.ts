@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { FaSquareXTwitter } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 
 export const Container = styled.div`
@@ -45,11 +44,6 @@ export const BotaoCadastro = styled.button`
   padding: 16px;
   border-radius: 12px;
   cursor: pointer;
-`
-
-export const LogoXtwitter = styled(FaSquareXTwitter)`
-  font-size: 48px;
-  color: white;
 `
 
 export const LinkCadastro = styled(Link)`

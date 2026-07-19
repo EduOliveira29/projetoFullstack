@@ -1,4 +1,5 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle, styled } from 'styled-components'
+import { BsTwitterX } from "react-icons/bs";
 
 export const GlobalCss = createGlobalStyle`
   * {
@@ -13,4 +14,8 @@ export const GlobalCss = createGlobalStyle`
   body {
     background-color: #000;
   }
+`
+
+export const LogoXtwitter = styled(BsTwitterX)`
+  font-size: 48px;
 `
