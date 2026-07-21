@@ -3,9 +3,13 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useGetUsuariosQuery } from '../../service/api'
 import { LogoXtwitter } from '../../styles'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../contexts/auth'
 
 const Login = () => {
-  const { data: usuarios, isLoading } = useGetUsuariosQuery()
+  const { setUsuarioLogado } = useAuth()
+  const navigate = useNavigate()
+  const { isLoading } = useGetUsuariosQuery()
   const formLogin = useFormik({
     initialValues: {
       email: '',
@@ -16,8 +20,6 @@ const Login = () => {
       password: Yup.string().required('O campo é obrigatório'),
     }),
     onSubmit: (values: { email: string; password: string }) => {
-      console.log('Valores digitados:', values)
-      console.log('Lista de usuários:', usuarios)
       handleLogin(values)
     },
   })
@@ -37,7 +39,9 @@ const Login = () => {
       const dados = await resposta.json()
 
       if (resposta.ok) {
-        window.location.href = "/Home"
+        localStorage.setItem('user', JSON.stringify(dados))
+        setUsuarioLogado(dados)
+        navigate("/Home")
       } else {
         console.error('Erro de validação:')
         alert('Erro: ' + JSON.stringify(dados))

@@ -141,7 +141,7 @@ const Cadastro = () => {
       </Form>
       <p>
         Already have an account?{' '}
-        <LinkCadastro to={'/Login'}>Log in</LinkCadastro>{' '}
+        <LinkCadastro to={'/'}>Log in</LinkCadastro>{' '}
       </p>
     </Container>
   )

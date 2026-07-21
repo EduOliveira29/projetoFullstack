@@ -8,6 +8,17 @@ export type Usuarios = {
   create_date: string
   avatar: string
   username: string
+  posts: [
+    {
+      id: number,
+      slug: string,
+      author_name: string,
+      content: string,
+      created_on: string,
+      status: boolean,
+      total_likes: number
+    }
+  ]
 }
 
 export const api = createApi({

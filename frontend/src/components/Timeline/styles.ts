@@ -39,4 +39,9 @@ export const Textarea = styled.textarea`
   background-color: black;
   font-size: 24px;
   color: white;
+  resize: none;
+`
+
+export const EnviarComentario = styled.button`
+  color white:
 `

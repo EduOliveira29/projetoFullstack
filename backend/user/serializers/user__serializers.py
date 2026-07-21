@@ -1,11 +1,13 @@
 # core/serializers.py
 from rest_framework import serializers
-from ..models.models import User 
+from ..models.user__models import User
+from .post__serializers import PostSerializer
 
 class UserSerializer(serializers.ModelSerializer):
+    posts = PostSerializer(source='users_posts', many=True, read_only=True)
     class Meta:
         model = User
-        fields = ['id', 'full_name', 'email', 'username', 'password']
+        fields = ['id', 'full_name', 'email', 'username', 'password', 'posts']
         extra_kwargs = {'password': {'write_only': True}}
 
 class LoginSerializer(serializers.Serializer):
