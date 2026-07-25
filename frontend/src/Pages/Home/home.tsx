@@ -1,11 +1,11 @@
-import SideBar from '../../components/Sidebar/Sidebar'
 import { Container } from './styles'
-import TimeLine from '../../components/Timeline/Timeline'
+import SideBar from '../../components/Sidebar/Sidebar'
+import Profile from '../../components/Profile/Profile'
 
 const Home = () => (
   <Container>
     <SideBar />
-    <TimeLine />
+    <Profile />
   </Container>
 )
 

@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { FaArrowLeft } from "react-icons/fa";
+import styled from 'styled-components'
+import { FaArrowLeft } from 'react-icons/fa'
 
 export const Container = styled.div`
   color: white;

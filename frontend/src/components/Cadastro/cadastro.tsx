@@ -35,24 +35,18 @@ const Cadastro = () => {
         .required('O campo é obrigatório'),
     }),
     onSubmit: async (values) => {
-      // 1. Validação de senhas
       if (values.password !== values.senhaConfirmacao) {
         alert('As senhas não coincidem!')
         return
       }
 
       try {
-        // 2. Limpeza: remove o campo que não deve ir para a API
-        // Cria um novo objeto apenas com os campos necessários
         const usuarioParaEnviar = {
           full_name: values.full_name,
           email: values.email,
           password: values.password,
           username: values.username,
-          // ... adicione outros campos se necessário
         }
-
-        // 3. Envia apenas o objeto limpo
         await cadastrar(usuarioParaEnviar).unwrap()
         alert('Usuário cadastrado com sucesso!')
       } catch (err) {

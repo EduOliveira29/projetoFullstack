@@ -1,24 +1,24 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export type Usuarios = {
-  id: string
-  full_name: string
-  email: string
-  password: string
-  create_date: string
-  avatar: string
-  username: string
-  posts: [
+  "id": number,
+  "username": string,
+  "email": string,
+  "full_name": string,
+  "password": string,
+  "followers_count": number,
+  "following_count": number,
+  "followers": [],
+  "following": [],
+  "posts": [
     {
-      id: number,
-      slug: string,
-      author_name: string,
-      content: string,
-      created_on: string,
-      status: boolean,
-      total_likes: number
-    }
-  ]
+      "created_on": string,
+      "status": number,
+      "total_likes": number,
+      "author_name": string,
+      "content": string
+    },
+  ],
 }
 
 export const api = createApi({
@@ -34,11 +34,21 @@ export const api = createApi({
         body: novoUsuario,
       }),
     }),
-    // Login: Busca todos os usuários e filtra no front (ou tenta filtrar pela API)
     getUsuarios: builder.query<Usuarios[], void>({
       query: () => 'users/',
+    }),
+    postUsuarioLogado: builder.mutation<Usuarios, Partial<Usuarios>>({
+      query: (usuarioLogin) => ({
+        url: 'users/login/',
+        method: 'POST',
+        body: usuarioLogin,
+      }),
     }),
   }),
 })
 
-export const { useCadastrarUsuarioMutation, useGetUsuariosQuery } = api
+export const {
+  useCadastrarUsuarioMutation,
+  useGetUsuariosQuery,
+  usePostUsuarioLogadoMutation,
+} = api

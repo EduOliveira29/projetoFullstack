@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 
 import Cadastro from './components/Cadastro/cadastro'
 import Login from './Pages/Login/login'
-import Home from './Pages/Home/home'
+import Home from './Pages/Home/Home'
 
 const Rotas = () => (
   <Routes>

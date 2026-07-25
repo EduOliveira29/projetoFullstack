@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { FaSearch } from 'react-icons/fa'
 import { CgProfile } from 'react-icons/cg'
-import { BsTwitterX } from "react-icons/bs";
+import { BsTwitterX } from 'react-icons/bs'
 import { CiHome } from 'react-icons/ci'
 import { Link } from 'react-router-dom'
 

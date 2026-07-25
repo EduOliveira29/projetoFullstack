@@ -1,15 +1,16 @@
 import { Container, Form, BotaoLogin, Input, LinkCadastro } from './styles'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { useGetUsuariosQuery } from '../../service/api'
+import { usePostUsuarioLogadoMutation } from '../../service/api'
 import { LogoXtwitter } from '../../styles'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../../contexts/auth'
+import { useDispatch } from 'react-redux';
+import { setUsuarioLogado } from '../../Slice'; // Importa a ação
 
 const Login = () => {
-  const { setUsuarioLogado } = useAuth()
   const navigate = useNavigate()
-  const { isLoading } = useGetUsuariosQuery()
+  const [postUsuarioLogado, { isLoading }] = usePostUsuarioLogadoMutation()
+  const dispatch = useDispatch()
   const formLogin = useFormik({
     initialValues: {
       email: '',
@@ -19,37 +20,20 @@ const Login = () => {
       email: Yup.string().required('O campo é obrigatório'),
       password: Yup.string().required('O campo é obrigatório'),
     }),
-    onSubmit: (values: { email: string; password: string }) => {
-      handleLogin(values)
-    },
-  })
-  const handleLogin = async (values: { email: string; password: string }) => {
-    try {
-      const resposta = await fetch('http://localhost:8000/api/users/login/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+    onSubmit: async (values: { email: string; password: string }) => {
+      try {
+        const resposta = await postUsuarioLogado({
           email: values.email,
           password: values.password,
-        }),
-      })
-
-      const dados = await resposta.json()
-
-      if (resposta.ok) {
-        localStorage.setItem('user', JSON.stringify(dados))
-        setUsuarioLogado(dados)
-        navigate("/Home")
-      } else {
-        console.error('Erro de validação:')
-        alert('Erro: ' + JSON.stringify(dados))
+        }).unwrap()
+        dispatch(setUsuarioLogado(resposta))
+        navigate('/Home')
+      } catch (erro) {
+        console.error('Erro de login:', erro)
+        alert('Email ou senha inválidos.')
       }
-    } catch (erro) {
-      console.error('Erro de conexão:', erro)
-    }
-  }
+    },
+  })
 
   return (
     <Container>

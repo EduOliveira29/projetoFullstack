@@ -1,5 +1,5 @@
 import { createGlobalStyle, styled } from 'styled-components'
-import { BsTwitterX } from "react-icons/bs";
+import { BsTwitterX } from 'react-icons/bs'
 
 export const GlobalCss = createGlobalStyle`
   * {
