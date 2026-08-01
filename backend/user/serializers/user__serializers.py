@@ -6,11 +6,18 @@ from .post__serializers import PostSerializer
 class UserSerializer(serializers.ModelSerializer):
     posts = PostSerializer(source='users_posts', many=True, read_only=True)
     following = serializers.SlugRelatedField(many=True, read_only=True, slug_field='username')
+    followers = serializers.SlugRelatedField(many=True, read_only=True, slug_field='username')
 
     class Meta:
         model = User
-        fields = ['id', 'full_name', 'email', 'username', 'password', 'posts', 'following']
+        fields = [
+            'id', 'full_name', 'username', 'email', 'posts', 'password', 
+            'followers', 'following' 
+        ]
         extra_kwargs = {'password': {'write_only': True}}
+
+    def get_followers_count(self, obj):
+        return obj.followers.count()
 
 class UserProfileSerializer(serializers.ModelSerializer):
     posts = PostSerializer(source='users_posts', many=True, read_only=True)
@@ -32,9 +39,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'username', 'email', 'full_name', 'posts',
+            'id', 'full_name', 'username', 'email', 'posts', 'password', 
             'followers_count', 'following_count', 'followers', 'following' 
         ]
+        extra_kwargs = {'password': {'write_only': True}}
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()

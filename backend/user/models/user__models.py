@@ -7,6 +7,8 @@ class User(models.Model):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=100)
     create_date = models.DateTimeField(auto_now_add=True)
+    profile_picture = models.ImageField(upload_to='profiles/', blank=True, null=True)
+    cover_image = models.ImageField(upload_to='covers/', blank=True, null=True)
     following = models.ManyToManyField(
         'self',
         symmetrical=False,

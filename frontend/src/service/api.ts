@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export type Usuarios = {
+  user: {
   "id": number,
   "username": string,
   "email": string,
@@ -12,6 +13,7 @@ export type Usuarios = {
   "following": [],
   "posts": [
     {
+      "id":  number,
       "created_on": string,
       "status": number,
       "total_likes": number,
@@ -19,6 +21,9 @@ export type Usuarios = {
       "content": string
     },
   ],
+  "profile_picture": string,
+  "cover_image": string,
+}
 }
 
 export const api = createApi({
@@ -26,7 +31,6 @@ export const api = createApi({
     baseUrl: 'http://127.0.0.1:8000/api/',
   }),
   endpoints: (builder) => ({
-    // Cadastro: Envia um novo objeto de usuário
     cadastrarUsuario: builder.mutation<Usuarios, Partial<Usuarios>>({
       query: (novoUsuario) => ({
         url: 'users/',
@@ -37,7 +41,7 @@ export const api = createApi({
     getUsuarios: builder.query<Usuarios[], void>({
       query: () => 'users/',
     }),
-    postUsuarioLogado: builder.mutation<Usuarios, Partial<Usuarios>>({
+    postUsuarioLogado: builder.mutation<Usuarios, Pick<Usuarios['user'], "email" | "password">>({
       query: (usuarioLogin) => ({
         url: 'users/login/',
         method: 'POST',

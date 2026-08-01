@@ -5,7 +5,7 @@ import { usePostUsuarioLogadoMutation } from '../../service/api'
 import { LogoXtwitter } from '../../styles'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
-import { setUsuarioLogado } from '../../Slice'; // Importa a ação
+import { setUsuarioLogado } from '../../Slice'
 
 const Login = () => {
   const navigate = useNavigate()

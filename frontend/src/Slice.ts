@@ -1,17 +1,19 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 export interface Usuarios {
-  "id": number,
-  "username": string,
-  "email": string,
-  "full_name": string,
-  "password": string,
-  "followers_count": number,
-  "following_count": number,
-  "followers": [],
-  "following": [],
-  "posts": [
-    {
+  user: {
+    "id": number,
+    "username": string,
+    "email": string,
+    "full_name": string,
+    "password": string,
+    "followers_count": number,
+    "following_count": number,
+    "followers": [],
+    "following": [],
+    "posts": [
+      {
+      "id": number,
       "created_on": string,
       "status": number,
       "total_likes": number,
@@ -19,6 +21,9 @@ export interface Usuarios {
       "content": string
     },
   ],
+    "profile_picture": string,
+    "cover_image": string,
+}
 }
 
 interface AuthState {
