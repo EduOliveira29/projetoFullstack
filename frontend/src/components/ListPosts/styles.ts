@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
@@ -7,4 +7,5 @@ export const Container = styled.div`
 
 export const Lista = styled.ul`
   color: white;
+  margin: 8px 0;
 `

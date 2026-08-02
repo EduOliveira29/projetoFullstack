@@ -1,4 +1,4 @@
-import {Container, Lista } from './styles'
+import { Container, Lista } from './styles'
 import Post from '../Post/Post'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../../store'
@@ -6,10 +6,9 @@ import type { RootState } from '../../store'
 const ListaPosts = () => {
   const usuario = useSelector((state: RootState) => state.auth.usuario)
 
-
   return (
-  <Container>
-    {usuario?.user.posts.map((post) => (
+    <Container>
+      {usuario?.user.posts.map((post) => (
         <Lista key={post.id}>
           <Post
             id={post.id}
@@ -21,8 +20,8 @@ const ListaPosts = () => {
           />
         </Lista>
       ))}
-  </Container>
-)
+    </Container>
+  )
 }
 
 export default ListaPosts

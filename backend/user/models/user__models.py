@@ -26,3 +26,15 @@ class User(models.Model):
         if not self.password.startswith('pbkdf2_'):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
+
+    @property
+    def profile_picture_url(self):
+        if self.profile_picture and hasattr(self.profile_picture, 'url'):
+            return self.profile_picture.url
+        return "https://placehold.co/50"
+
+    @property
+    def cover_image_url(self):
+        if self.cover_image and hasattr(self.cover_image, 'url'):
+            return self.cover_image.url
+        return "https://placehold.co/200x100"

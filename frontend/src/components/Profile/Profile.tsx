@@ -4,7 +4,7 @@ import type { RootState } from '../../store'
 
 const Profile = () => {
   const usuario = useSelector((state: RootState) => state.auth.usuario)
-
+  console.log(usuario?.user)
 
   return (
     <Container>

@@ -4,7 +4,7 @@ import * as Yup from 'yup'
 import { usePostUsuarioLogadoMutation } from '../../service/api'
 import { LogoXtwitter } from '../../styles'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux'
 import { setUsuarioLogado } from '../../Slice'
 
 const Login = () => {
