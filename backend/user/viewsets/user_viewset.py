@@ -1,19 +1,21 @@
-from rest_framework import viewsets, status, permissions
-from ..models.user__models import User
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from ..serializers.user__serializers import UserSerializer, UserProfileSerializer, UserUpdateSerializer
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 from rest_framework.decorators import action
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.db.models import Count
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.permissions import IsAuthenticated
 
+from ..models.user__models import User
+from ..serializers.user__serializers import (
+    UserSerializer, 
+    UserProfileSerializer, 
+    UserUpdateSerializer
+)
+from ..utils.auth import CustomJWTAuthentication
 
-@method_decorator(csrf_exempt, name='dispatch')
+
 class LoginView(APIView):
     def post(self, request):
         email = request.data.get("email")
@@ -26,36 +28,57 @@ class LoginView(APIView):
 
         if user.check_password(password):
             refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
 
             data = {
-                'access': str(refresh.access_token),
                 'user': UserSerializer(user).data
             }
 
             response = Response(data, status=status.HTTP_200_OK)
 
             response.set_cookie(
-                key='refresh_token',
-                value=str(refresh),
+                key='access',
+                value=access_token,
                 httponly=True,
-                secure=True,
+                secure=False,    # Mudar para True em produção (HTTPS)
                 samesite='Lax',
-                path='/'
+                path='/',
             )
-            
-            return Response(data, status=status.HTTP_200_OK)
+
+            return response
         
         return Response({'error': 'E-mail ou senha inválidos.'}, status=status.HTTP_401_UNAUTHORIZED)
-    
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserProfileSerializer
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_serializer_class(self):
+        if self.action in ['update', 'partial_update', 'update_profile']:
+            return UserUpdateSerializer
+        return UserProfileSerializer
     
     def get_queryset(self):
         return User.objects.all().annotate(followers_count=Count('followers'))
 
-    @action(detail=True, methods=['post'])
+    @action(detail=False, methods=['patch'], permission_classes=[IsAuthenticated], authentication_classes=[CustomJWTAuthentication])
+    def update_profile(self, request):
+        try:
+            user = request.user
+            serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+        
+            if serializer.is_valid():
+                serializer.save()
+                updated_profile = UserProfileSerializer(user, context={'request': request})
+                return Response(updated_profile.data, status=status.HTTP_200_OK)
+            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated], authentication_classes=[CustomJWTAuthentication])
     def follow(self, request, pk=None):
         target_user = self.get_object()
         current_user = request.user
@@ -72,35 +95,3 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             current_user.following.add(target_user)
             return Response({"status": "Seguindo com sucesso"}, status=status.HTTP_200_OK)
-
-class UserProfileUpdateView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-    parser_classes = [MultiPartParser, FormParser]
-
-    def patch(self, request):
-        serializer = UserUpdateSerializer(request.user, data=request.data, partial=True)
-        if serializer.is_valid():
-            user_atualizado = serializer.save() 
-        
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self, instance, validated_data):
-        password = validated_data.pop('password', None)
-        full_name = validated_data.pop('full_name', None)
-        username = validated_data.pop('username', None)
-
-        if full_name:
-            names = full_name.strip().split(' ', 1)
-            instance.first_name = names[0]
-            instance.last_name = names[1] if len(names) > 1 else ''
-
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-
-        if password:
-            instance.set_password(password)
-
-        instance.save()
-        return instance

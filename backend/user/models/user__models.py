@@ -16,6 +16,10 @@ class User(models.Model):
         blank=True
     )
 
+    @property
+    def is_authenticated(self):
+        return True
+
     def __str__(self):
         return self.username
     

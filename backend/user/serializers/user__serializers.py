@@ -17,8 +17,6 @@ class UserSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {'password': {'write_only': True}}
 
-    def get_followers_count(self, obj):
-        return obj.followers.count()
 
 class UserProfileSerializer(serializers.ModelSerializer):
     posts = PostSerializer(source='users_posts', many=True, read_only=True)
@@ -38,6 +36,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only=True, 
         slug_field='username'
     )
+    
 
     class Meta:
         model = User
@@ -59,6 +58,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {'password': {'write_only': True}}
 
+        def get_followers_count(self, obj):
+            return obj.followers.count()
+
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -68,51 +70,36 @@ class LoginSerializer(serializers.Serializer):
         email = data.get('email')
         password = data.get('password')
 
-        user = User.objects.filter(email=email).first()
-        user = User.objects.get(email=email)
-        
-        if user.check_password(password):
-            print("Password matches")
-        
-        raise serializers.ValidationError("E-mail ou senha inválidos.")
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("E-mail ou senha inválidos.")
+
+        if not user.check_password(password):
+            raise serializers.ValidationError("E-mail ou senha inválidos.")
+
+        data['user'] = user
+        return data
 
 class UserUpdateSerializer(serializers.ModelSerializer):
-    profile_picture_url = serializers.ReadOnlyField()
-    cover_image_url = serializers.ReadOnlyField()
-
     class Meta:
         model = User
-        fields = [
-            'id', 
-            'username',
-            'full_name',
-            'password',
-            'profile_picture',
-            'cover_image',  
-            'profile_picture_url',  
-            'cover_image_url'
-        ]
+        fields = ['full_name', 'password', 'username']
         extra_kwargs = {
-            'profile_picture': {'write_only': True, 'required': False},
-            'cover_image': {'write_only': True, 'required': False},
-            'username': {'required': False},
-            'full_name': {'required': False},
-            'password': {
-                'write_only': True,
-                'required': False,
-                'style': {'input_type': 'password'}
-            }
+            'username': {'required': False, 'allow_blank': True},
+            'full_name': {'required': False, 'allow_blank': True},
+            'password': {'required': False, 'allow_blank': True}
         }
 
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
 
         for attr, value in validated_data.items():
-            setattr(instance, attr, value)
+            if value is not None and str(value).strip() != "":
+                setattr(instance, attr, value)
 
-        if password:
+        if password and str(password).strip() != "" and not password.startswith('pbkdf2_'):
             instance.set_password(password)
 
         instance.save()
         return instance
-

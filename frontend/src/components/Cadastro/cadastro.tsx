@@ -49,6 +49,7 @@ const Cadastro = () => {
         }
         await cadastrar(usuarioParaEnviar).unwrap()
         alert('Usuário cadastrado com sucesso!')
+        formCadastro.resetForm()
       } catch (err) {
         alert('Erro ao cadastrar!')
         console.log('Erro completo:', err)
@@ -134,8 +135,8 @@ const Cadastro = () => {
         </BotaoCadastro>
       </Form>
       <p>
-        Already have an account?{' '}
-        <LinkCadastro to={'/'}>Log in</LinkCadastro>{' '}
+        Already have an account?
+        <LinkCadastro to={'/'}>Log in</LinkCadastro>
       </p>
     </Container>
   )

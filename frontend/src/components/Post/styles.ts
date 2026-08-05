@@ -6,13 +6,16 @@ export const Container = styled.div`
   color: white;
   padding: 4px 8px;
   border: 1px dashed white;
-
-  p {
-    padding: 4px 8px;
-  }
+  height: 200px;
+  justify-content: space-around;
 `
 
 export const Cabecalho = styled.div`
   display: flex;
   align-items: flex-start;
+  justify-content: space-around;
+
+  img {
+    width: 40px;
+  }
 `

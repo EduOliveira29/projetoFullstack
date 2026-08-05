@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { Container, Cabecalho } from './styles'
 
 type Props = {
@@ -10,13 +11,14 @@ type Props = {
 }
 
 const Post = ({ author_name, content, created_on, total_likes }: Props) => {
+  const dataFormatada = dayjs(created_on).format('DD-MM-YYYY HH:mm:ss')
   return (
     <Container>
       <Cabecalho>
         <img src="https://placehold.co/20x20" alt="" />
         <p>Profile</p>
         <p>@{author_name}</p>
-        <p>{created_on}</p>
+        <p>{dataFormatada}</p>
       </Cabecalho>
       <div>
         <p>{content}</p>

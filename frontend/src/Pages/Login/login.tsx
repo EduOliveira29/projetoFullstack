@@ -1,11 +1,11 @@
-import { Container, Form, BotaoLogin, Input, LinkCadastro } from './styles'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import { usePostUsuarioLogadoMutation } from '../../service/api'
-import { LogoXtwitter } from '../../styles'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import * as Yup from 'yup'
+import { useFormik } from 'formik'
 import { setUsuarioLogado } from '../../Slice'
+import { usePostUsuarioLogadoMutation } from '../../service/api'
+import { Container, Form, BotaoLogin, Input, LinkCadastro } from './styles'
+import { LogoXtwitter } from '../../styles'
 
 const Login = () => {
   const navigate = useNavigate()

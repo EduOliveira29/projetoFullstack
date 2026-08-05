@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export type Usuarios = {
+  acess: string,
   user: {
     id: number
     username: string
@@ -28,10 +29,14 @@ export type Usuarios = {
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://127.0.0.1:8000/api/',
+    baseUrl: 'http://localhost:8000/api/',
+    credentials: 'include',
   }),
   endpoints: (builder) => ({
-    cadastrarUsuario: builder.mutation<Usuarios, Partial<Usuarios>>({
+    cadastrarUsuario: builder.mutation<
+      Usuarios[],
+      Pick<Usuarios['user'], 'full_name' | 'email' | 'password' | 'username'>
+    >({
       query: (novoUsuario) => ({
         url: 'users/',
         method: 'POST',
@@ -48,31 +53,20 @@ export const api = createApi({
       query: (usuarioLogin) => ({
         url: 'users/login/',
         method: 'POST',
+        credentials: 'include',
         body: usuarioLogin,
       }),
     }),
-    updateUsuarioDados: builder.mutation<Usuarios, Record<string, unknown>>({
-      query: (formikValues) => {
-        const formData = new FormData()
-
-        Object.entries(formikValues).forEach(([key, value]) => {
-          if (value instanceof File) {
-            formData.append(key, value)
-          } else if (
-            typeof value === 'string' ||
-            typeof value === 'number' ||
-            typeof value === 'boolean'
-          ) {
-            formData.append(key, String(value))
-          }
-        })
-
-        return {
-          url: 'users/update/',
-          method: 'PATCH',
-          body: formData,
-        }
-      },
+    updateUsuarioDados: builder.mutation<
+      Usuarios,
+      Pick<Usuarios['user'], 'full_name' | 'password' | 'username'>
+    >({
+      query: (alterarDadosUsuario) => ({
+        url: 'users/update_profile/',
+        method: 'PATCH',
+        body: alterarDadosUsuario,
+        credentials: 'include',
+      }),
     }),
   }),
 })
@@ -81,4 +75,5 @@ export const {
   useCadastrarUsuarioMutation,
   useGetUsuariosQuery,
   usePostUsuarioLogadoMutation,
+  useUpdateUsuarioDadosMutation,
 } = api
